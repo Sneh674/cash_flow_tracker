@@ -21,6 +21,14 @@ const verifyOTP=async(req,res,next)=>{
     }
 
     try {
+        try {
+            const updatedUser = await userModel.updateOne(
+                { _id: userId },
+                { $set: { verifiedonce: true } }
+            );
+        } catch (error) {
+            return next(createHTTPError(500,"Error updating whether user is verified or not"))
+        }
         const accesstoken=await signAccessToken(userId)
         res.json({
             id: userId,

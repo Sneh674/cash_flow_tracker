@@ -2,6 +2,7 @@ const express = require('express')
 const app = express();
 const path = require("path")
 const userRoute = require('./routes/user_route.js')
+const appRoute=require("./routes/app_routes.js")
 const createHTTPError = require("http-errors")
 require('dotenv').config();
 
@@ -15,6 +16,7 @@ app.get("/", (req, res) => {
 })
 
 app.use("/", userRoute)
+app.use("/", appRoute)
 
 app.use((req, res, next) => {
     next(createHTTPError(404, "This page does not exist"));
