@@ -3,7 +3,7 @@ const router = express();
 const { verifyAccessToken } = require("../helpers/jwt.js");
 
 /**
- * @swagger
+ * @openapi
  * /home:
  *   get:
  *     summary: Get user ID from the home route

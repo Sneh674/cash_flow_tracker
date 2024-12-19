@@ -10,7 +10,7 @@ module.exports={
             }
             const secret=process.env.ACCESSTOKEN_SECRET
             const options={
-                expiresIn: "1h"
+                expiresIn: "7d"
             }
             jwt.sign(payload,secret,options,(err,token)=>{
                 if(err){

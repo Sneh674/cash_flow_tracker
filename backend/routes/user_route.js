@@ -4,7 +4,7 @@ const { registerUser, loginUser }=require("../controllers/user/userdetails_contr
 const {verifyOTP}=require("../controllers/user/verifyotp_conroller.js")
 
 /**
- * @swagger
+ * @openapi
  * /register:
  *   post:
  *     summary: Register a new user
@@ -52,7 +52,7 @@ const {verifyOTP}=require("../controllers/user/verifyotp_conroller.js")
 router.post("/register",registerUser)
 
 /**
- * @swagger
+ * @openapi
  * /login:
  *   post:
  *     summary: User login
@@ -98,7 +98,7 @@ router.post("/register",registerUser)
 router.post("/login",loginUser)
 
 /**
- * @swagger
+ * @openapi
  * /verifyotp:
  *   post:
  *     summary: Verify OTP for user authentication
