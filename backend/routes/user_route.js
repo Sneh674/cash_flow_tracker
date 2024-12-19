@@ -56,17 +56,48 @@ router.post("/login",loginUser)
 
 /**
  * @swagger
- * /:
- *  post:
- *      summary: verify otp
- *      description: otp verifiction using post method
- *      requestBody:
- *          required: true
- *      responses:
- *          200:
- *              description: successfully verified otp
- *          400:
- *             description: OTP verification failed
+ * /verifyotp:
+ *   post:
+ *     summary: Verify OTP for user authentication
+ *     description: This endpoint allows verifying the OTP entered by the user to authenticate them.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               otpentered:
+ *                 type: string
+ *                 description: OTP entered by the user for verification
+ *               otpgenerated:
+ *                 type: string
+ *                 description: OTP that was generated and sent to the user
+ *               userId:
+ *                 type: string
+ *                 description: User ID of the person attempting OTP verification
+ *             required:
+ *               - otpentered
+ *               - otpgenerated
+ *               - userId
+ *     responses:
+ *       200:
+ *         description: OTP successfully verified
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 id:
+ *                   type: string
+ *                   description: The user ID
+ *                 token:
+ *                   type: string
+ *                   description: The access token returned after successful OTP verification
+ *       400:
+ *         description: Invalid OTP or missing parameters
+ *       500:
+ *         description: Server error, could not verify OTP
  */
 router.post("/verifyotp",verifyOTP)
 
