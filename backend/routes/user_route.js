@@ -48,6 +48,8 @@ const {verifyOTP}=require("../controllers/user/verifyotp_conroller.js")
  *         description: Bad request due to missing fields or user already exists
  *       500:
  *         description: Server error during registration process
+ *       422:
+ *         description: Invalid input, Joi error
  */
 router.post("/register",registerUser)
 

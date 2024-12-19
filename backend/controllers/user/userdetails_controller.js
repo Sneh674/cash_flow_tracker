@@ -1,5 +1,7 @@
 const createHTTPError = require("http-errors");
 const userModel = require("../../models/user_model.js");
+const {registerSchema, loginEmailSchema, loginMobileSchema}= require("../../helpers/validation_schema.js")
+
 
 const registerUser = async (req, res, next) => {
     const { name, cc, mobile, email } = req.body;
@@ -7,6 +9,8 @@ const registerUser = async (req, res, next) => {
         return next(createHTTPError(400, "All fields required"));
     }
     try {
+        const result=await registerSchema.validateAsync(req.body)
+        console.log(result);
         try {
             const user = await userModel.findOne({ mobile: mobile });
             if (user) {
@@ -32,6 +36,7 @@ const registerUser = async (req, res, next) => {
             );
         }
     } catch (error) {
+        if(error.isJoi==true){return next(createHTTPError(422,`Invalid input: Joi error: ${error}`))}
         return next(createHTTPError(500, `Error while registering user: ${error}`));
     }
 };
@@ -49,11 +54,15 @@ const loginUser = async (req, res, next) => {
     try {
         let user;
         if (cc && mobile) {
+            const result=await loginMobileSchema.validateAsync({cc, mobile})
+            console.log(result);
             user = await userModel.findOne({ mobile: mobile, countrycode: cc });
             if (!user) {
                 return next(createHTTPError(400, "User not found with provided mobile and country code"));
             }
         } else if (email) {
+            const result=await loginEmailSchema.validateAsync({email})
+            console.log(result);
             user = await userModel.findOne({ email: email });
             if (!user) {
                 return next(createHTTPError(400, "User not found with provided email"));
@@ -64,7 +73,7 @@ const loginUser = async (req, res, next) => {
             user: user,
         });
     } catch (error) {
-        return next(createHTTPError(500, "Error while logging in user"));
+        return next(createHTTPError(500, `Error while logging in user: ${error}`));
     }
 };
 
