@@ -5,9 +5,6 @@ const createHttpError = require("http-errors");
 const {signAccessToken}=require("../../helpers/jwt.js")
 
 
-
-
-
 const verifyOTP=async(req,res,next)=>{
     const {otpentered, otpgenerated, userId}=req.body;
     //or use req.params.id for userId

@@ -3,10 +3,53 @@ const router=express();
 const { registerUser, loginUser }=require("../controllers/user/userdetails_controller.js")
 const {verifyOTP}=require("../controllers/user/verifyotp_conroller.js")
 
-
-
+/**
+ * @swagger
+ * /register:
+ *   post:
+ *     summary: Register a new user
+ *     description: This endpoint allows for the registration of a new user by providing required details like name, mobile, and email.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               name:
+ *                 type: string
+ *                 description: The full name of the user.
+ *               cc:
+ *                 type: string
+ *                 description: The country code for the user's mobile number.
+ *               mobile:
+ *                 type: string
+ *                 description: The mobile number of the user.
+ *               email:
+ *                 type: string
+ *                 format: email
+ *                 description: The email address of the user.
+ *             required:
+ *               - name
+ *               - mobile
+ *               - email
+ *     responses:
+ *       200:
+ *         description: User registered successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 user:
+ *                   type: object
+ *                   additionalProperties: true
+ *       400:
+ *         description: Bad request due to missing fields or user already exists
+ *       500:
+ *         description: Server error during registration process
+ */
 router.post("/register",registerUser)
-
 
 /**
  * @swagger
