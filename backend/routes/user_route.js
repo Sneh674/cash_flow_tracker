@@ -1,7 +1,10 @@
-const express = require('express')
-const router=express();
-const { registerUser, loginUser }=require("../controllers/user/userdetails_controller.js")
-const {verifyOTP}=require("../controllers/user/verifyotp_conroller.js")
+const express = require("express");
+const router = express();
+const {
+  registerUser,
+  loginUser,
+} = require("../controllers/user/userdetails_controller.js");
+const { verifyOTP } = require("../controllers/user/verifyotp_conroller.js");
 
 /**
  * @openapi
@@ -51,7 +54,7 @@ const {verifyOTP}=require("../controllers/user/verifyotp_conroller.js")
  *       422:
  *         description: Invalid input, Joi error
  */
-router.post("/register",registerUser)
+router.post("/register", registerUser);
 
 /**
  * @openapi
@@ -97,7 +100,7 @@ router.post("/register",registerUser)
  *       500:
  *         description: Error while logging in user
  */
-router.post("/login",loginUser)
+router.post("/login", loginUser);
 
 /**
  * @openapi
@@ -144,6 +147,6 @@ router.post("/login",loginUser)
  *       500:
  *         description: Server error, could not verify OTP
  */
-router.post("/verifyotp",verifyOTP)
+router.post("/verifyotp", verifyOTP);
 
-module.exports=router
+module.exports = router;

@@ -1,7 +1,7 @@
-const mongoose = require('mongoose');
-require('dotenv').config();
+const mongoose = require("mongoose");
+require("dotenv").config();
 // const {connectDb}=require("../config/db.js")
-mongoose.connect(process.env.MONGODB_URL)
+mongoose.connect(process.env.MONGODB_URL);
 // const connect=async()=>{
 //     const resp=await connectDb
 //     console.log(resp)
@@ -15,12 +15,15 @@ const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 // Regular expression for ensuring at least one letter (for name and email)
 const atLeastOneLetterRegex = /[a-zA-Z]/;
 
-const userSchema = mongoose.Schema({
+const userSchema = mongoose.Schema(
+  {
     name: { type: String, required: true, match: atLeastOneLetterRegex },
     countrycode: { type: String, required: true, default: "91" },
-    mobile: { type: String, required: true, unique: true, match: mobileRegex, },
-    email: {type: String, required: true, match: emailRegex,},
-    verifiedonce: {type: Boolean, required: true}
-}, { timestamps: true });
+    mobile: { type: String, required: true, unique: true, match: mobileRegex },
+    email: { type: String, required: true, match: emailRegex },
+    verifiedonce: { type: Boolean, required: true },
+  },
+  { timestamps: true }
+);
 
-module.exports=mongoose.model('user', userSchema);
+module.exports = mongoose.model("user", userSchema);

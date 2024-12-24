@@ -26,7 +26,7 @@ const options = {
           type: "http",
           scheme: "bearer",
           bearerFormat: "JWT",
-        }
+        },
       },
     },
     security: [
@@ -42,7 +42,12 @@ const options = {
     ],
   },
   // looks for configuration in specified directories
-  apis: ["./routes/*.js", "./index.js", path.join(__dirname, "./routes/*.js"), path.join(__dirname, "./index.js"),],
+  apis: [
+    "./routes/*.js",
+    "./index.js",
+    path.join(__dirname, "./routes/*.js"),
+    path.join(__dirname, "./index.js"),
+  ],
 };
 const swaggerSpec = swaggerJsdoc(options);
 // function swaggerDocs(app, port) {
@@ -61,7 +66,6 @@ app.get("/api-docs.json", (req, res) => {
   res.setHeader("Content-Type", "application/json");
   res.send(swaggerSpec);
 });
-
 
 /**
  * @openapi
@@ -108,6 +112,6 @@ app.use((err, req, res, next) => {
 
 app.listen(port, () => {
   console.log(`listening at port: ${port}`);
-  console.log(`home at: http://localhost:${port}`)
-  console.log(`Docs available at http://localhost:${port}/api-docs`)
+  console.log(`home at: http://localhost:${port}`);
+  console.log(`Docs available at http://localhost:${port}/api-docs`);
 });
