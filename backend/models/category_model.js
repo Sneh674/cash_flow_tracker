@@ -11,7 +11,7 @@ const TransactionSchema = new mongoose.Schema({
 
 // SubCategory Schema
 const SubCategorySchema = new mongoose.Schema({
-  name: { type: String, required: true }, // Sub-category name (e.g., "Salary", "Petrol")
+  name: { type: String, required: true, unique: true }, // Sub-category name (e.g., "Salary", "Petrol")
   description: { type: String, }, // Description for inflow or outflow
   budget: { type: Number }, // Budget (applicable only for outflow)
   transactions: [TransactionSchema], // Array of transactions

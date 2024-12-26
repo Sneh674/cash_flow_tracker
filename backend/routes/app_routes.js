@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express();
 const { verifyAccessToken } = require("../helpers/jwt.js");
-const { addNewField, showAllTransactions } = require("../controllers/app/tracker_controller.js");
+const { addNewField, showAllTransactions, editTransaction, editSubCategory } = require("../controllers/app/tracker_controller.js");
 
 /**
  * @openapi
@@ -110,5 +110,7 @@ router.get("/home", verifyAccessToken, (req, res) => {
  */
 router.post("/home/addnewtracker", verifyAccessToken, addNewField);
 router.get("/home/showAllTransactions", verifyAccessToken, showAllTransactions);
+router.patch("/home/:mainCategory/:subCategory/:date", verifyAccessToken, editTransaction);
+router.patch("/home/:mainCategory/:subCategory", verifyAccessToken, editSubCategory);
 
 module.exports = router;

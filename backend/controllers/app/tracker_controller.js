@@ -119,4 +119,70 @@ const showAllTransactions = async (req, res, next) => {
   }
 };
 
-module.exports = { addNewField, showAllTransactions };
+const editTransaction = async (req, res, next) => {};
+const editSubCategory = async (req, res, next) => {
+  try {
+    const mainCategory = req.params.mainCategory;
+    const subCategory = req.params.subCategory;
+    const { name, budget, desc } = req.body;
+    if (!subCategory || !mainCategory) {
+      return next(createHTTPError(500, `No params found`));
+    }
+    try {
+      // Fetch the category to perform validation
+      const category = await categoryModel.findOne({
+        "subCategories.name": subCategory,
+      });
+
+      if (!category) {
+        return next(createHTTPError(404, `Sub-category not found.`));
+      }
+      try {
+        // Check if the new name already exists (excluding the one being updated)
+        const duplicate = category.subCategories.some(
+          (subCat) => subCat.name === name && subCat.name !== subCategory
+        );
+
+        if (duplicate) {
+          return next(
+            createHTTPError(
+              400,
+              `A sub-category with the name "${name}" already exists.`
+            )
+          );
+        }
+      } catch (error) {
+        return next(
+          createHTTPError(
+            500,
+            `Error checking if name already exists: ${error}`
+          )
+        );
+      }
+
+      const updatedSubCat = await categoryModel.updateOne(
+        { "subCategories.name": subCategory }, // Query to locate the array element
+        {
+          $set: {
+            "subCategories.$.budget": budget, // Update budget
+            "subCategories.$.description": desc, // Update description
+            "subCategories.$.name": name,
+          },
+        }
+      );
+
+      res.json({ updated: updatedSubCat });
+    } catch (error) {
+      return next(createHTTPError(500, `Error updating in db: ${error}`));
+    }
+  } catch (error) {
+    return next(createHTTPError(500, `Error updating subcategory: ${error}`));
+  }
+};
+
+module.exports = {
+  addNewField,
+  showAllTransactions,
+  editTransaction,
+  editSubCategory,
+};
