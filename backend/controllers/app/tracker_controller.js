@@ -1,8 +1,19 @@
 const createHTTPError = require("http-errors");
 const categoryModel = require("../../models/category_model.js");
+const randomString = require("random-string");
+
+// Function to generate a transactionId
+const generateTransactionId = () => {
+  return new Promise((resolve) => {
+    const transactionId = randomString({ length: 20 });
+    resolve(transactionId);
+  });
+};
 
 const addNewField = async (req, res, next) => {
   try {
+    // const transactionId=randomString({ length: 20 });
+    const transactionId = await generateTransactionId();
     const userId = req.user.id;
     const { mainCategory, subCategory, desc, budget, amount, date, note } =
       req.body;
@@ -13,6 +24,7 @@ const addNewField = async (req, res, next) => {
       flowType: mainCategory,
     });
 
+    console.log(cashFlow);
     if (!cashFlow) {
       // Create a new main category with the subcategory and transaction
       cashFlow = await categoryModel.create({
@@ -28,14 +40,17 @@ const addNewField = async (req, res, next) => {
                 amount,
                 date: date || Date.now(),
                 note,
+                transactionId,
               },
             ],
           },
         ],
       });
-      return res
-        .status(201)
-        .json({ message: "New main category created", data: cashFlow });
+      return res.status(201).json({
+        message: "New main category created",
+        data: cashFlow,
+        transactionId: cashFlow.subCategories[0].transactions[0].transactionId,
+      });
     }
 
     // Check if the subcategory exists
@@ -43,12 +58,15 @@ const addNewField = async (req, res, next) => {
       (sub) => sub.name === subCategory
     );
 
+    // console.log("trial");
+    // console.log(subCategoryIndex);
     if (subCategoryIndex !== -1) {
       // Subcategory exists: Add the transaction
       cashFlow.subCategories[subCategoryIndex].transactions.push({
         amount,
         date: date || Date.now(),
         note,
+        transactionId,
       });
     } else {
       // Subcategory doesn't exist: Add a new subcategory
@@ -61,13 +79,27 @@ const addNewField = async (req, res, next) => {
             amount,
             date: date || Date.now(),
             note,
+            transactionId,
           },
         ],
       });
     }
 
+    console.log(cashFlow);
     // Save the updated document
-    await cashFlow.save();
+    try {
+      await cashFlow.save();
+    } catch (err) {
+      if (err.code === 11000) {
+        return next(
+          createHTTPError(
+            400,
+            `Duplicate sub-category name found: "${subCategory}". Error: ${err}.`
+          )
+        );
+      }
+      throw err; // Re-throw for other errors
+    }
 
     res
       .status(200)
@@ -119,18 +151,80 @@ const showAllTransactions = async (req, res, next) => {
   }
 };
 
-const editTransaction = async (req, res, next) => {};
+const editTransaction = async (req, res, next) => {
+  try {
+    const mainCategory = req.params.mainCategory;
+    const subCategory = req.params.subCategory;
+    const tId = req.params.transactionId;
+    const userId = req.user.id;
+    const { amount, date, note } = req.body;
+    if (!subCategory || !mainCategory || !tId) {
+      return next(createHTTPError(500, `No params found`));
+    }
+    const toUpdate = await categoryModel.findOne({
+      userId: userId,
+      flowType: mainCategory,
+      "subCategories.name": subCategory,
+      "subCategories.transactions._id": tId,
+    });
+    if (!toUpdate) {
+      return next(createHTTPError(500, `can't find data to update`));
+    }
+
+    const updateFields = {};
+
+    if (amount !== undefined) {
+      updateFields["subCategories.$.transactions.$[elem].amount"] = amount;
+    }
+
+    if (note !== undefined) {
+      updateFields["subCategories.$.transactions.$[elem].note"] = note;
+    }
+
+    if (date !== undefined) {
+      updateFields["subCategories.$.transactions.$[elem].date"] = date;
+    }
+    try {
+      const updatedTransaction = await categoryModel.findOneAndUpdate(
+        {
+          userId: userId,
+          flowType: mainCategory,
+          "subCategories.name": subCategory,
+          "subCategories.transactions._id": tId,
+        },
+        {
+          $set: updateFields,
+        },
+        {
+          arrayFilters: [{ "elem._id": tId }],
+          new: true, // To return the updated document
+        }
+      );
+      res.json({ updated: updatedTransaction });
+    } catch (error) {
+      return next(
+        createHTTPError(500, `Error updating transaction in db: ${error}`)
+      );
+    }
+  } catch (error) {
+    return next(createHTTPError(500, `Error updating transaction: ${error}`));
+  }
+};
 const editSubCategory = async (req, res, next) => {
   try {
     const mainCategory = req.params.mainCategory;
     const subCategory = req.params.subCategory;
+    const userId = req.user.id;
     const { name, budget, desc } = req.body;
     if (!subCategory || !mainCategory) {
       return next(createHTTPError(500, `No params found`));
     }
     try {
+      // console.log(await categoryModel.findOne({"subCategories.name": "Freelance"},{ "subCategories.$": 1 }))
       // Fetch the category to perform validation
       const category = await categoryModel.findOne({
+        userId,
+        flowType: mainCategory,
         "subCategories.name": subCategory,
       });
 
@@ -161,7 +255,11 @@ const editSubCategory = async (req, res, next) => {
       }
 
       const updatedSubCat = await categoryModel.updateOne(
-        { "subCategories.name": subCategory }, // Query to locate the array element
+        {
+          userId,
+          flowType: mainCategory,
+          "subCategories.name": subCategory,
+        }, // Query to locate the array element
         {
           $set: {
             "subCategories.$.budget": budget, // Update budget

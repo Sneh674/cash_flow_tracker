@@ -110,7 +110,10 @@ router.get("/home", verifyAccessToken, (req, res) => {
  */
 router.post("/home/addnewtracker", verifyAccessToken, addNewField);
 router.get("/home/showAllTransactions", verifyAccessToken, showAllTransactions);
-router.patch("/home/:mainCategory/:subCategory/:date", verifyAccessToken, editTransaction);
+
+// router.patch("/home/:mainCategory/:subCategory/:dateTransaction", verifyAccessToken, editTransaction);
+router.patch("/home/:mainCategory/:subCategory/:transactionId", verifyAccessToken, editTransaction);
+
 router.patch("/home/:mainCategory/:subCategory", verifyAccessToken, editSubCategory);
 
 module.exports = router;
