@@ -12,7 +12,7 @@ const TransactionSchema = new mongoose.Schema({
 // SubCategory Schema
 const SubCategorySchema = new mongoose.Schema({
   name: { type: String, required: true }, // Sub-category name (e.g., "Salary", "Petrol")
-  description: { type: String, required: true }, // Description for inflow or outflow
+  description: { type: String, }, // Description for inflow or outflow
   budget: { type: Number }, // Budget (applicable only for outflow)
   transactions: [TransactionSchema], // Array of transactions
 });
@@ -20,7 +20,7 @@ const SubCategorySchema = new mongoose.Schema({
 // Cash Flow Schema
 const CashFlowSchema = new mongoose.Schema({
   userId: { type: mongoose.Schema.Types.ObjectId, ref: 'user', required: true }, // Link to User
-  type: { 
+  flowType: { 
     type: String, 
     enum: ['inflow', 'outflow', 'savings'], 
     required: true 
