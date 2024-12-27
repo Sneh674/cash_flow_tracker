@@ -215,7 +215,7 @@ const editSubCategory = async (req, res, next) => {
     const mainCategory = req.params.mainCategory;
     const subCategory = req.params.subCategory;
     const userId = req.user.id;
-    const { name, budget, desc } = req.body;
+    let { name, budget, desc, imgUrl } = req.body;
     if (!subCategory || !mainCategory) {
       return next(createHTTPError(500, `No params found`));
     }
@@ -230,6 +230,21 @@ const editSubCategory = async (req, res, next) => {
 
       if (!category) {
         return next(createHTTPError(404, `Sub-category not found.`));
+      }
+      const indexOfSubCat = category.subCategories.findIndex(
+        (i) => i.name === subCategory
+      );
+      if (!name) {
+        name = category.subCategories[indexOfSubCat].name;
+      }
+      if (!budget) {
+        budgete = category.subCategories[indexOfSubCat].budget;
+      }
+      if (!desc) {
+        desc = category.subCategories[indexOfSubCat].description;
+      }
+      if (!imgUrl) {
+        imgUrl = category.subCategories[indexOfSubCat].imgUrl;
       }
       try {
         // Check if the new name already exists (excluding the one being updated)
@@ -265,11 +280,12 @@ const editSubCategory = async (req, res, next) => {
             "subCategories.$.budget": budget, // Update budget
             "subCategories.$.description": desc, // Update description
             "subCategories.$.name": name,
+            "subCategories.$.imgUrl": imgUrl,
           },
         }
       );
 
-      res.json({ updated: updatedSubCat });
+      res.json({ updated: updatedSubCat, cat: category });
     } catch (error) {
       return next(createHTTPError(500, `Error updating in db: ${error}`));
     }
