@@ -2,6 +2,7 @@ const express = require("express");
 const router = express();
 const { verifyAccessToken } = require("../helpers/jwt.js");
 const { addNewField, showAllTransactions, editTransaction, editSubCategory } = require("../controllers/app/tracker_controller.js");
+const {deleteTransaction, deleteSubCategory}= require("../controllers/app/tracker_controller2.js");
 
 /**
  * @openapi
@@ -115,5 +116,8 @@ router.get("/home/showAllTransactions", verifyAccessToken, showAllTransactions);
 router.patch("/home/:mainCategory/:subCategory/:transactionId", verifyAccessToken, editTransaction);
 
 router.patch("/home/:mainCategory/:subCategory", verifyAccessToken, editSubCategory);
+
+router.delete("/home/:mainCategory/:id",verifyAccessToken,deleteSubCategory)
+router.delete("/home/:mainCategory/:subCategory/:id",verifyAccessToken,deleteTransaction)
 
 module.exports = router;
