@@ -1,8 +1,8 @@
 const express = require("express");
 const router = express();
 const { verifyAccessToken } = require("../helpers/jwt.js");
-const { addNewField, showAllTransactions, editTransaction, editSubCategory } = require("../controllers/app/tracker_controller.js");
-const {deleteTransaction, deleteSubCategory}= require("../controllers/app/tracker_controller2.js");
+const { addNewField, showAllTransactions, editTransaction, editSubCategory, addSubCategory, addTransaction } = require("../controllers/app/tracker_controller.js");
+const {deleteTransaction, deleteSubCategory, showAllCategories, showTransactions}= require("../controllers/app/tracker_controller2.js");
 
 /**
  * @openapi
@@ -109,8 +109,12 @@ router.get("/home", verifyAccessToken, (req, res) => {
  *       500:
  *         description: Server error during the process.
  */
-router.post("/home/addnewtracker", verifyAccessToken, addNewField);
-router.get("/home/showAllTransactions", verifyAccessToken, showAllTransactions);
+// router.post("/home/addnewtracker", verifyAccessToken, addNewField);
+router.post("/home/addnewcategory", verifyAccessToken, addSubCategory);
+router.post("/home/addnewtransaction", verifyAccessToken, addTransaction);
+// router.get("/home/showAllTransactions", verifyAccessToken, showAllTransactions);
+router.get("/home/showAllCategories/:mainCategory?", verifyAccessToken, showAllCategories)
+router.get("/home/showTransactions/:mainCategory/:subCategory?", verifyAccessToken, showTransactions)
 
 // router.patch("/home/:mainCategory/:subCategory/:dateTransaction", verifyAccessToken, editTransaction);
 router.patch("/home/:mainCategory/:subCategory/:transactionId", verifyAccessToken, editTransaction);

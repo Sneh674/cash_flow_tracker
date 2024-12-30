@@ -3,11 +3,108 @@ const categoryModel = require("../../models/category_model.js");
 const randomString = require("random-string");
 
 // Function to generate a transactionId
-const generateTransactionId = () => {
-  return new Promise((resolve) => {
-    const transactionId = randomString({ length: 20 });
-    resolve(transactionId);
-  });
+// const generateTransactionId = () => {
+//   return new Promise((resolve) => {
+//     const transactionId = randomString({ length: 20 });
+//     resolve(transactionId);
+//   });
+// };
+
+const addSubCategory = async (req, res, next) => {
+  const userId = req.user.id;
+  const { mainCategory, subCategory, desc, budget, img } = req.body;
+  if (!mainCategory) {
+    return next(createHTTPError(500, "couldn't get main category"));
+  }
+  if (!subCategory) {
+    return next(createHTTPError(400, "add category name"));
+  }
+  try {
+    let cashFlow = await categoryModel.findOne({
+      userId,
+      flowType: mainCategory,
+      "subCategories.name": subCategory,
+    });
+    if (cashFlow) {
+      return next(createHTTPError(500, "Sub category already exists"));
+    }
+    try {
+      let mainExists = await categoryModel.findOne({
+        userId,
+        flowType: mainCategory,
+      });
+      if (!mainExists) {
+        mainExists = await categoryModel.create({
+          userId,
+          flowType: mainCategory,
+          subCategories: [
+            {
+              name: subCategory,
+              description: desc,
+              budget,
+              transactions: [],
+            },
+          ],
+        });
+      } else {
+        mainExists = await categoryModel.findOneAndUpdate(
+          { userId, flowType: mainCategory },
+          {
+            subCategories: [
+              {
+                name: subCategory,
+                description: desc,
+                budget,
+                transactions: [],
+              },
+            ],
+          }
+        );
+      }
+      res.json({ addedsubcat: mainExists });
+    } catch (error) {
+      return next(createHTTPError(500, `Error adding sub category:${error}`));
+    }
+  } catch (error) {
+    return next(createHTTPError(500, `Error adding sub category: ${error}`));
+  }
+};
+
+const addTransaction = async (req, res, next) => {
+  const userId = req.user.id;
+  const { mainCategory, subCategory, amount, note, date } = req.body;
+  try {
+    let subCat = await categoryModel.findOne({
+      userId,
+      flowType: mainCategory,
+      "subCategories.name": subCategory,
+    });
+    if (!subCat) {
+      return next(createHTTPError(500, "No such sub category found"));
+    }
+    // const subCategoryIndex=subCat.findIndex
+    const indexToAdd = subCat.subCategories.findIndex(
+      (i) => i.name === subCategory
+    );
+    try {
+      if (indexToAdd == -1) {
+        return next(createHTTPError(500, "index of sub cat not found"));
+      }
+      subCat.subCategories[indexToAdd].transactions.push({
+        amount,
+        date,
+        note,
+      });
+      await subCat.save();
+    } catch (err) {
+      return next(
+        createHTTPError(500, `Error adding transaction to db:${err}`)
+      );
+    }
+    res.json({ new: subCat });
+  } catch (error) {
+    return next(createHTTPError(500, `Error adding transaction: ${error}`));
+  }
 };
 
 const addNewField = async (req, res, next) => {
@@ -111,45 +208,45 @@ const addNewField = async (req, res, next) => {
   }
 };
 
-const showAllTransactions = async (req, res, next) => {
-  try {
-    // const mainCategory=req.params.mainCategory
-    const userId = req.user.id;
-    try {
-      const transactionsData = await categoryModel
-        .find({ userId })
-        .sort({ date: -1 });
-      // const transactions= await categoryModel.find({flowType:'inflow'})
-      let t = [];
-      // t.push({})
-      for (let i = 0; i < transactionsData.length; i++) {
-        subcatlen = transactionsData[i].subCategories.length;
-        for (let j = 0; j < subcatlen; j++) {
-          transactionslen =
-            transactionsData[i].subCategories[j].transactions.length;
-          for (let k = 0; k < transactionslen; k++) {
-            t.push({
-              flowType: transactionsData[i].flowType,
-              sub: transactionsData[i].subCategories[j].name,
-              amt: transactionsData[i].subCategories[j].transactions[k].amount,
-              date: transactionsData[i].subCategories[j].transactions[k].date,
-            });
-          }
-        }
-      }
-      t.sort((a, b) => b.date - a.date);
-      // console.log(t);
-      // res.json({ success: transactionsData})
-      res.json({ ans: t });
-    } catch (error) {
-      return next(
-        createHTTPError(500, `Error while fetching data from db: ${error}`)
-      );
-    }
-  } catch (error) {
-    return next(createHTTPError(500, `can't show all transactions: ${error}`));
-  }
-};
+// const showAllTransactions = async (req, res, next) => {
+//   try {
+//     // const mainCategory=req.params.mainCategory
+//     const userId = req.user.id;
+//     try {
+//       const transactionsData = await categoryModel
+//         .find({ userId })
+//         .sort({ date: -1 });
+//       // const transactions= await categoryModel.find({flowType:'inflow'})
+//       let t = [];
+//       // t.push({})
+//       for (let i = 0; i < transactionsData.length; i++) {
+//         subcatlen = transactionsData[i].subCategories.length;
+//         for (let j = 0; j < subcatlen; j++) {
+//           transactionslen =
+//             transactionsData[i].subCategories[j].transactions.length;
+//           for (let k = 0; k < transactionslen; k++) {
+//             t.push({
+//               flowType: transactionsData[i].flowType,
+//               sub: transactionsData[i].subCategories[j].name,
+//               amt: transactionsData[i].subCategories[j].transactions[k].amount,
+//               date: transactionsData[i].subCategories[j].transactions[k].date,
+//             });
+//           }
+//         }
+//       }
+//       t.sort((a, b) => b.date - a.date);
+//       // console.log(t);
+//       // res.json({ success: transactionsData})
+//       res.json({ ans: t });
+//     } catch (error) {
+//       return next(
+//         createHTTPError(500, `Error while fetching data from db: ${error}`)
+//       );
+//     }
+//   } catch (error) {
+//     return next(createHTTPError(500, `can't show all transactions: ${error}`));
+//   }
+// };
 
 const editTransaction = async (req, res, next) => {
   try {
@@ -296,7 +393,9 @@ const editSubCategory = async (req, res, next) => {
 
 module.exports = {
   addNewField,
-  showAllTransactions,
+  // showAllTransactions,
   editTransaction,
   editSubCategory,
+  addSubCategory,
+  addTransaction,
 };
