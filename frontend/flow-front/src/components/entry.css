@@ -1,0 +1,88 @@
+/* Entry component styles */
+*{
+    margin: 0;
+}
+.entry-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+    padding: 2rem;
+    background-color: #111;
+    color: #fff;
+}
+
+h1 {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    color: #2ecc71;
+    /* Bright green */
+    text-align: center;
+}
+
+h2 {
+    font-size: 1.5rem;
+    margin-bottom: 2rem;
+    color: #ddd;
+    text-align: center;
+}
+
+.btnsEntry {
+    display: flex;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.btnsEntry a {
+    padding: 0.8rem 2rem;
+    font-size: 1.1rem;
+    text-decoration: none;
+    color: #fff;
+    background-color: #2ecc71;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    border: 2px solid #2ecc71;
+}
+
+.btnsEntry a:hover {
+    background-color: transparent;
+    color: #2ecc71;
+    transform: translateY(-2px);
+}
+
+/* Media Queries */
+@media (max-width: 768px) {
+    h1 {
+        font-size: 2.5rem;
+    }
+
+    h2 {
+        font-size: 1.25rem;
+    }
+
+    .btnsEntry {
+        flex-direction: column;
+        width: 100%;
+        max-width: 300px;
+    }
+
+    .btnsEntry a {
+        width: 100%;
+        text-align: center;
+    }
+}
+
+@media (max-width: 480px) {
+    h1 {
+        font-size: 2rem;
+    }
+
+    h2 {
+        font-size: 1.1rem;
+    }
+
+    .entry-container {
+        padding: 1rem;
+    }
+}

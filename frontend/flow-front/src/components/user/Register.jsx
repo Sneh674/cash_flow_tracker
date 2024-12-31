@@ -1,12 +1,13 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import axios from 'axios';
+import axios from "axios";
+import "./register.css";
 
 const Register = () => {
-    const navigate=useNavigate()
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     name: "",
-    cc: "+91",
+    cc: "91",
     mobile: "",
     email: "",
   });
@@ -22,20 +23,28 @@ const Register = () => {
   const handleRegisterSubmit = async (e) => {
     e.preventDefault();
     try {
-        const resp= await axios.post(`${import.meta.env.VITE_API_URL}/register`, formData)
-        console.log(resp)
-        navigate("/verifyotp")
+      const resp = await axios.post(
+        `${import.meta.env.VITE_API_URL}/register`,
+        formData
+      );
+      console.log(resp);
+      navigate("/verifyotp");
     } catch (error) {
-        console.error('Error during Registration:', error.response?.data.error.message || error.message);
-        setMessage(error.response?.data.error.message || error.message)
+      console.error(
+        "Error during Registration:",
+        error.response?.data.error.message || error.message
+      );
+      setMessage(error.response?.data.error.message || error.message);
     }
   };
   return (
     <div className="registerMain">
       <div>
-        <Link to="/">Go Back</Link>
+        <Link to="/" className="go-back-link">
+          Go Back
+        </Link>
       </div>
-      Register User
+      <div>Register User</div>
       <form onSubmit={handleRegisterSubmit}>
         <input
           type="text"
@@ -44,14 +53,11 @@ const Register = () => {
           placeholder="Enter your name"
           onChange={handleChange}
         />
-        {/* <input type="text" name="cc" id="cc" placeholder="Country Code" onChange={handleChange}/> */}
         <select name="cc" value={formData.cc} onChange={handleChange}>
-          {/* <option value="">Select Country Code</option> */}
-          <option value="+91">+91 (India)</option>
-          <option value="+1">+1 (USA)</option>
-          <option value="+44">+44 (UK)</option>
-          <option value="+61">+61 (Australia)</option>
-          {/* Add more country codes as needed */}
+          <option value="91">+91 (India)</option>
+          <option value="1">+1 (USA)</option>
+          <option value="44">+44 (UK)</option>
+          <option value="61">+61 (Australia)</option>
         </select>
         <input
           type="tel"
@@ -69,7 +75,7 @@ const Register = () => {
         />
         <input type="submit" value="Submit" />
       </form>
-      <div style={{color:"orange"}}>{mesasge}</div>
+      <div style={{ color: "orange" }}>{mesasge}</div>
     </div>
   );
 };

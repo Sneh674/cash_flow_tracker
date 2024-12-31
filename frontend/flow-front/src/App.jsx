@@ -28,7 +28,7 @@ function App() {
       element: <Register />
     },
     {
-      path: "/verifyotp",
+      path: "/verifyotp/:id",
       element: <Verifyotp />
     }
   ]);

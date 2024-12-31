@@ -1,0 +1,132 @@
+/* Global Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Roboto', sans-serif;
+    background-color: #111;
+    color: #fff;
+}
+
+/* Register Page Styling */
+.registerMain {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 2rem;
+    background-color: #111;
+    color: #fff;
+    text-align: center;
+}
+
+/* Go Back Link Styling (Positioned Top Left) */
+.registerMain .go-back-link {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    color: #76d77a;
+    text-decoration: none;
+    font-size: 1.2rem;
+    font-weight: 600;
+    padding: 10px 20px;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+.registerMain .go-back-link:hover {
+    background-color: #76d77a;
+    color: #111;
+    transform: translateY(-2px);
+    text-decoration: none;
+}
+
+.registerMain .go-back-link:focus {
+    outline: 2px solid #4bb74a;
+    outline-offset: 4px;
+}
+
+/* Form Styles */
+.registerMain form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-top: 1rem;
+    width: 100%;
+    max-width: 400px;
+    padding: 2rem;
+    background-color: #1a1a1a;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+input,
+select {
+    padding: 0.8rem 1rem;
+    border: 2px solid #333;
+    border-radius: 8px;
+    background-color: #222;
+    color: #fff;
+    font-size: 1rem;
+    width: 100%;
+    transition: border-color 0.3s ease;
+}
+
+input:focus,
+select:focus {
+    outline: none;
+    border-color: #2ecc71;
+}
+
+input[type="submit"] {
+    background-color: #2ecc71;
+    color: #fff;
+    border: none;
+    padding: 1rem;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+}
+
+input[type="submit"]:hover {
+    background-color: #25a25a;
+}
+
+/* Error Message Styling */
+div[style*="color:orange"] {
+    margin-top: 1rem;
+    text-align: center;
+    font-size: 0.9rem;
+    color: #ff4d4d;
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+    .registerMain {
+        padding: 1rem;
+    }
+
+    .registerMain form {
+        padding: 1.5rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .registerMain {
+        padding: 1rem;
+    }
+
+    input,
+    select,
+    button {
+        padding: 0.7rem;
+    }
+
+    .registerMain .go-back-link {
+        font-size: 1rem;
+    }
+}

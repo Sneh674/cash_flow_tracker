@@ -2,12 +2,13 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import axios from 'axios';
+import './login.css'
 
 const Login = () => {
   const navigate = useNavigate();
   const [mesasge, setMessage] = useState("");
   const [formData, setFormData] = useState({
-    cc: "+91",
+    cc: "91",
     mobile: "",
     email: "",
   });
@@ -26,7 +27,9 @@ const Login = () => {
     try {
         const resp= await axios.post(`${import.meta.env.VITE_API_URL}/login`, formData)
         console.log(resp)
-        navigate("/verifyotp")
+        console.log(resp.data.user._id)
+        const userId=resp.data.user._id
+        navigate(`/verifyotp/${userId}`)
     } catch (error) {
         console.error('Error during Login:', error.response?.data.error.message || error.message);
         setMessage(error.response?.data.error.message || error.message)
@@ -37,17 +40,17 @@ const Login = () => {
   return (
     <div>
       <div>
-        <Link to="/">Go Back</Link>
+        <Link to="/" className="link">Go Back</Link>
       </div>
       <div className="loginMain">
         {usingMobile ? (
           <div className="usemobile">
             <form onSubmit={handleLoginSubmit}>
               <select name="cc" id="cc" value={formData.cc} onChange={handleChange}>
-                <option value="+91">+91 (India)</option>
-                <option value="+1">+1 (USA)</option>
-                <option value="+44">+44 (UK)</option>
-                <option value="+61">+61 (Australia)</option>
+                <option value="91">+91 (India)</option>
+                <option value="1">+1 (USA)</option>
+                <option value="44">+44 (UK)</option>
+                <option value="61">+61 (Australia)</option>
               </select>
               <input
                 type="tel"

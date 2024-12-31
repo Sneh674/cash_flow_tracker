@@ -1,9 +1,10 @@
 // import React from 'react'
 import { Link } from 'react-router-dom'
+import './entry2.css'
 
 const Entry = () => {
   return (
-    <div style={{"display":"flex", flexDirection:"column", alignItems: "center"}}>
+    <div className="entry-container">
       <h1>
         Cash Flow Tracker
       </h1>

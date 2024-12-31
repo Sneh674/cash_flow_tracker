@@ -1,0 +1,97 @@
+/* Global styles for body */
+body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    background-color: #1e1e1e;
+    color: #fff;
+}
+
+/* Styling the Entry container */
+.entry-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    background-color: #1e1e1e;
+    color: #fff;
+    text-align: center;
+}
+
+/* Header styles */
+.entry-container h1 {
+    font-size: 3rem;
+    margin-bottom: 0.5rem;
+    color: #76d77a;
+    /* Green */
+}
+
+.entry-container h2 {
+    font-size: 1.5rem;
+    color: #fff;
+    margin-bottom: 2rem;
+}
+
+/* Button container */
+.btnsEntry {
+    display: flex;
+    gap: 20px;
+}
+
+/* Link button styles */
+.btnsEntry a {
+    display: inline-block;
+    padding: 10px 20px;
+    font-size: 1rem;
+    text-decoration: none;
+    background-color: #76d77a;
+    /* Green */
+    color: #1e1e1e;
+    /* Black */
+    border-radius: 5px;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+/* Hover effect for links */
+.btnsEntry a:hover {
+    background-color: #4bb74a;
+    /* Darker green */
+    transform: scale(1.05);
+}
+
+/* Media queries for responsiveness */
+@media (max-width: 768px) {
+    .entry-container h1 {
+        font-size: 2.5rem;
+    }
+
+    .entry-container h2 {
+        font-size: 1.2rem;
+    }
+
+    .btnsEntry {
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .btnsEntry a {
+        padding: 12px 25px;
+        font-size: 1.1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .entry-container h1 {
+        font-size: 2rem;
+    }
+
+    .entry-container h2 {
+        font-size: 1rem;
+    }
+
+    .btnsEntry a {
+        padding: 10px 20px;
+        font-size: 1rem;
+    }
+}
