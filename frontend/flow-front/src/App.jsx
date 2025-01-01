@@ -10,6 +10,8 @@ import Login from './components/user/Login';
 import Register from './components/user/Register';
 import Verifyotp from './components/user/Verifyotp';
 import Home from './components/app/Home';
+import Addcategory from './components/app/Addcategory';
+import Transacforcat from './components/app/Transacforcat';
 
 function App() {
   // const [count, setCount] = useState(0);
@@ -35,6 +37,14 @@ function App() {
     {
       path:"/home/:id",
       element: <Home />
+    },
+    {
+      path:"/home/:id/addcat",
+      element: <Addcategory />
+    },
+    {
+      path:"/home/:id/selectedsubcat/:mainc/:subc",
+      element: <Transacforcat />
     }
   ]);
 

@@ -30,7 +30,7 @@ const Entry = () => {
     if (token) {
       try {
         const resp2 = verifyToken(token);
-        // console.log(resp2);
+        console.log(resp2);
         // eslint-disable-next-line no-unused-vars
       } catch (error) {
         localStorage.removeItem('token')
@@ -38,7 +38,7 @@ const Entry = () => {
         console.log(error)
       }
     }
-  }, []);
+  },);
 
   return (
     <div className="font-tinos flex flex-col items-center justify-center min-h-screen bg-black text-white px-6">

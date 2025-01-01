@@ -208,21 +208,63 @@ const addNewField = async (req, res, next) => {
   }
 };
 
+const showAllTransactions = async (req, res, next) => {
+  try {
+    const limit=8
+    // const mainCategory=req.params.mainCategory
+    const userId = req.user.id;
+    try {
+      const transactionsData = await categoryModel
+        .find({ userId })
+        .sort({ date: -1 });
+      // const transactions= await categoryModel.find({flowType:'inflow'})
+      let t = [];
+      // t.push({})
+      for (let i = 0; i < transactionsData.length; i++) {
+        subcatlen = transactionsData[i].subCategories.length;
+        for (let j = 0; j < subcatlen; j++) {
+          transactionslen =
+            transactionsData[i].subCategories[j].transactions.length;
+          for (let k = 0; k < transactionslen; k++) {
+            t.push({
+              flowType: transactionsData[i].flowType,
+              sub: transactionsData[i].subCategories[j].name,
+              amt: transactionsData[i].subCategories[j].transactions[k].amount,
+              date: transactionsData[i].subCategories[j].transactions[k].date,
+            });
+          }
+        }
+      }
+      t.sort((a, b) => b.date - a.date);
+      const paginatedTransactions = t.slice(0, 0 + limit);
+
+      res.json({ ans: paginatedTransactions });
+    } catch (error) {
+      return next(
+        createHTTPError(500, `Error while fetching data from db: ${error}`)
+      );
+    }
+  } catch (error) {
+    return next(createHTTPError(500, `can't show all transactions: ${error}`));
+  }
+};
+
 // const showAllTransactions = async (req, res, next) => {
 //   try {
-//     // const mainCategory=req.params.mainCategory
 //     const userId = req.user.id;
+//     const page = parseInt(req.query.page) || 1; // Default to page 1
+//     const limit = parseInt(req.query.limit) || 10; // Default to 10 items per page
+//     const skip = (page - 1) * limit;
+
 //     try {
 //       const transactionsData = await categoryModel
 //         .find({ userId })
 //         .sort({ date: -1 });
-//       // const transactions= await categoryModel.find({flowType:'inflow'})
 //       let t = [];
-//       // t.push({})
 //       for (let i = 0; i < transactionsData.length; i++) {
-//         subcatlen = transactionsData[i].subCategories.length;
+//         const subcatlen = transactionsData[i].subCategories.length;
 //         for (let j = 0; j < subcatlen; j++) {
-//           transactionslen =
+//           const transactionslen =
 //             transactionsData[i].subCategories[j].transactions.length;
 //           for (let k = 0; k < transactionslen; k++) {
 //             t.push({
@@ -235,9 +277,9 @@ const addNewField = async (req, res, next) => {
 //         }
 //       }
 //       t.sort((a, b) => b.date - a.date);
-//       // console.log(t);
-//       // res.json({ success: transactionsData})
-//       res.json({ ans: t });
+//       const paginatedTransactions = t.slice(skip, skip + limit);
+
+//       res.json({ ans: paginatedTransactions });
 //     } catch (error) {
 //       return next(
 //         createHTTPError(500, `Error while fetching data from db: ${error}`)
@@ -247,6 +289,7 @@ const addNewField = async (req, res, next) => {
 //     return next(createHTTPError(500, `can't show all transactions: ${error}`));
 //   }
 // };
+
 
 const editTransaction = async (req, res, next) => {
   try {
@@ -393,7 +436,7 @@ const editSubCategory = async (req, res, next) => {
 
 module.exports = {
   addNewField,
-  // showAllTransactions,
+  showAllTransactions,
   editTransaction,
   editSubCategory,
   addSubCategory,

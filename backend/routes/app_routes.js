@@ -112,7 +112,7 @@ router.get("/home", verifyAccessToken, (req, res) => {
 // router.post("/home/addnewtracker", verifyAccessToken, addNewField);
 router.post("/home/addnewcategory", verifyAccessToken, addSubCategory);
 router.post("/home/addnewtransaction", verifyAccessToken, addTransaction);
-// router.get("/home/showAllTransactions", verifyAccessToken, showAllTransactions);
+router.get("/home/showAllTransactions", verifyAccessToken, showAllTransactions);
 router.get("/home/showAllCategories/:mainCategory?", verifyAccessToken, showAllCategories)
 router.get("/home/showTransactions/:mainCategory/:subCategory?", verifyAccessToken, showTransactions)
 
