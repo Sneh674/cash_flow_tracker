@@ -1,6 +1,45 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from "react-router-dom";
+import { useEffect } from "react";
+import axios from "axios";
 
 const Entry = () => {
+  const navigate = useNavigate();
+
+  const verifyToken = async (token) => {
+    try {
+      const resp = await axios.get(`${import.meta.env.VITE_API_URL}/home`, {
+        headers: {
+          Authorization: `Bearer ${token}`, // Attach the token
+          "Content-Type": "application/json", // Optional additional headers
+        },
+      });
+      console.log(resp.data.userid)
+      const userId=resp.data.userid;
+      try {
+        navigate(`/home/${userId}`)
+      } catch (error) {
+        console.log(error)
+      }
+      return resp.data.userid;
+    } catch (error) {
+      console.log(error)
+    }
+  };
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      try {
+        const resp2 = verifyToken(token);
+        // console.log(resp2);
+        // eslint-disable-next-line no-unused-vars
+      } catch (error) {
+        localStorage.removeItem('token')
+        navigate("/");
+        console.log(error)
+      }
+    }
+  }, []);
+
   return (
     <div className="font-tinos flex flex-col items-center justify-center min-h-screen bg-black text-white px-6">
       {/* Header Section */}
