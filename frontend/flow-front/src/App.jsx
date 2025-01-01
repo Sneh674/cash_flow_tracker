@@ -9,6 +9,7 @@ import Entry from "./components/Entry";
 import Login from './components/user/Login';
 import Register from './components/user/Register';
 import Verifyotp from './components/user/Verifyotp';
+import Home from './components/app/Home';
 
 function App() {
   // const [count, setCount] = useState(0);
@@ -30,6 +31,10 @@ function App() {
     {
       path: "/verifyotp/:id",
       element: <Verifyotp />
+    },
+    {
+      path:"/home/:id",
+      element: <Home />
     }
   ]);
 

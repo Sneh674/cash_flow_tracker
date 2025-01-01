@@ -38,7 +38,7 @@ const Login = () => {
   };
   const [usingMobile, setUsingMobile] = useState(true);
   return (
-    <div>
+    <div className="font-tinos">
       <div>
         <Link to="/" className="link">Go Back</Link>
       </div>

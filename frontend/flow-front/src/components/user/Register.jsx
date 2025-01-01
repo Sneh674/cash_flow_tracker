@@ -38,7 +38,7 @@ const Register = () => {
     }
   };
   return (
-    <div className="registerMain">
+    <div className="registerMain font-tinos">
       <div>
         <Link to="/" className="go-back-link">
           Go Back
