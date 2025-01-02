@@ -42,10 +42,10 @@ const Home = () => {
     navigate(`/home/${userId}/addcat`);
   };
 
-  const handleCatClick=(maincat,subcat)=>{
-    navigate(`/home/${userId}/selectedsubcat/${maincat}/${subcat}`)
+  const handleCatClick = (maincat, subcat) => {
+    navigate(`/home/${userId}/selectedsubcat/${maincat}/${subcat}`);
     // alert("fwsefsdc")
-  }
+  };
 
   useEffect(() => {
     setLoading(true);
@@ -67,21 +67,26 @@ const Home = () => {
   }, []);
 
   return (
-    <div>
+    <div className="bg-cover bg-center h-screen bg-[url('/buildings.jpg')] overflow-y-scroll">
       {loading ? (
-        <div className="p-10 text-green-300 font-semibold">
+        <div className="p-10 text-yellow-600 font-semibold">
           Please wait, Loading...
         </div>
       ) : (
-        <div>
+        <div className="">
           <div className="btns flex justify-between">
             <button
               onClick={logOut}
-              className="w-max m-3 md:m-5 md:text-xl text-base font-bold hover:font-extrabold hover:bg-green-400"
+              className="w-max m-3 md:m-5 md:text-xl text-black border-cyan-500 bg-cyan-400 text-base font-bold hover:font-extrabold hover:bg-green-400"
             >
               Log Out
             </button>
-            <button onClick={()=>handleAddCat} className="w-max m-3 md:m-5 md:text-xl text-base font-bold hover:font-extrabold hover:bg-green-400">Add Category</button>
+            <button
+              onClick={handleAddCat}
+              className="w-max m-3 md:m-5 md:text-xl text-base text-black border-cyan-500 bg-cyan-400 bg-opacity-70 font-bold hover:font-extrabold hover:bg-green-400"
+            >
+              Add Category
+            </button>
           </div>
 
           {/* Display categories in a grid layout */}
@@ -90,19 +95,31 @@ const Home = () => {
               categories.map((category, index) => (
                 <div
                   key={index}
-                  onClick={()=>handleCatClick(category.mainCategory,category.subCategoryName)}
-                  className="category-item cursor-pointer hover:bg-slate-600 bg-gray-700 p-4 m-2 rounded-md text-white flex flex-col sm:text-base text-sm md:text-xl overflow-hidden"
+                  className="category-item cursor-pointer bg-gray-700 m-2 bg-opacity-80 rounded-md text-white flex flex-col sm:text-base text-sm md:text-xl overflow-hidden"
                 >
-                  <div className="text-base smtext-lg md:text-2xl font-semibold">
-                    Flow Type: {category.mainCategory}
+                  <div className="subcatdetails hover:bg-slate-600 rounded-md p-4" onClick={() =>
+                    handleCatClick(
+                      category.mainCategory,
+                      category.subCategoryName
+                    )
+                  }>
+                    <div className="text-base smtext-lg md:text-2xl font-semibold">
+                      Flow Type: {category.mainCategory}
+                    </div>
+                    <div className="md:h-9 md:overflow-hidden">
+                      Category Name: {category.subCategoryName}
+                    </div>
+                    <div className="md:h-20 overflow-y-scroll scrollbar-hide h-14">
+                      Description: {category.description}
+                    </div>
                   </div>
-                  <div className="md:h-9 md:overflow-hidden">
-                    Category Name: {category.subCategoryName}
-                  </div>
-                  <div className="md:h-20 overflow-y-scroll scrollbar-hide h-14">
-                    Description: {category.description}
-                  </div>
-                  <Link className="text-blue-400 hover:text-blue-600">Edit</Link>
+
+                  <Link
+                    to={`/home/${userId}/editsubcat/${category.mainCategory}/${category.subCategoryName}`}
+                    className="text-blue-400 hover:text-green-400 hover:bg-slate-600 rounded-md p-3 flex justify-center"
+                  >
+                    Edit
+                  </Link>
                 </div>
               ))
             ) : (

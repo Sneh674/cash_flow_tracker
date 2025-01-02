@@ -24,7 +24,7 @@ const CashFlowSchema = new mongoose.Schema({
   userId: { type: mongoose.Schema.Types.ObjectId, ref: "user", required: true }, // Link to User
   flowType: {
     type: String,
-    enum: ["inflow", "outflow", "savings"],
+    enum: ["inflow", "outflow", "savings", "Inflow", "Outflow", "Savings"],
     required: true,
   },
   subCategories: [SubCategorySchema], // Array of sub-categories

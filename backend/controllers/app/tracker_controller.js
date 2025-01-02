@@ -434,6 +434,44 @@ const editSubCategory = async (req, res, next) => {
   }
 };
 
+const getSubCat=async(req,res,next)=>{
+  try {
+    const mainCategory = req.params.mainCategory;
+    const subCategory = req.params.subCategory;
+    const userId = req.user.id;
+    // let { name, budget, desc, imgUrl } = req.body;
+    if (!subCategory || !mainCategory) {
+      return next(createHTTPError(500, `No params found`));
+    }
+    try {
+      // console.log(await categoryModel.findOne({"subCategories.name": "Freelance"},{ "subCategories.$": 1 }))
+      // Fetch the category to perform validation
+      const category = await categoryModel.findOne({
+        userId,
+        flowType: mainCategory,
+        "subCategories.name": subCategory,
+      });
+
+      if (!category) {
+        return next(createHTTPError(404, `Sub-category not found.`));
+      }
+      const indexOfSubCat=category.subCategories.findIndex((i) => i.name === subCategory)
+      const budget=category.subCategories[indexOfSubCat].budget
+      const desc=category.subCategories[indexOfSubCat].description
+      res.json({category:{
+        flowType:mainCategory,
+        subCategory,
+        desc,
+        budget,
+      }, cat:category.subCategories[indexOfSubCat],ind: indexOfSubCat})
+    } catch (error) {
+      return next(createHTTPError(500, `Error getting in db: ${error}`));
+    }
+  } catch (error) {
+    return next(createHTTPError(500, `Error fetching subcategory: ${error}`));
+  }
+}
+
 module.exports = {
   addNewField,
   showAllTransactions,
@@ -441,4 +479,5 @@ module.exports = {
   editSubCategory,
   addSubCategory,
   addTransaction,
+  getSubCat,
 };

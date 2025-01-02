@@ -11,7 +11,9 @@ import Register from './components/user/Register';
 import Verifyotp from './components/user/Verifyotp';
 import Home from './components/app/Home';
 import Addcategory from './components/app/Addcategory';
-import Transacforcat from './components/app/Transacforcat';
+import Transacforcat from './components/app2/Transacforcat';
+import Editcat from './components/app2/Editcat';
+import Addtransac from './components/app2/Addtransac';
 
 function App() {
   // const [count, setCount] = useState(0);
@@ -45,6 +47,14 @@ function App() {
     {
       path:"/home/:id/selectedsubcat/:mainc/:subc",
       element: <Transacforcat />
+    },
+    {
+      path:"/home/:id/editsubcat/:mainc/:subc",
+      element: <Editcat />
+    },
+    {
+      path:"/home/:id/addtransaction/:mainc/:subc",
+      element: <Addtransac />
     }
   ]);
 
