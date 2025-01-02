@@ -22,7 +22,7 @@ body {
     align-items: center;
     min-height: 100vh;
     padding: 2rem;
-    background-color: #111;
+    /* background-color: #111; */
     color: #fff;
     position: relative; /* Ensure Go Back button stays within the page */
 }

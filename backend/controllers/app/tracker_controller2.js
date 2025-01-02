@@ -192,9 +192,55 @@ const showTransactions = async (req, res, next) => {
   }
 };
 
+const getTransac=async(req,res,next)=>{
+  try {
+    const mainCategory = req.params.mainCategory;
+    const subCategory = req.params.subCategory;
+    const tId=req.params.tId
+    const userId = req.user.id;
+    // let { name, budget, desc, imgUrl } = req.body;
+    if (!subCategory || !mainCategory) {
+      return next(createHTTPError(500, `No params found`));
+    }
+    try {
+      // console.log(await categoryModel.findOne({"subCategories.name": "Freelance"},{ "subCategories.$": 1 }))
+      // Fetch the category to perform validation
+      const category = await categoryModel.findOne({
+        userId,
+        flowType: mainCategory,
+        "subCategories.name": subCategory,
+        "subCategories.transactions._id":tId
+      });
+
+      if (!category) {
+        return next(createHTTPError(404, `Transaction not found.`));
+      }
+      const indexOfSubCat=category.subCategories.findIndex((i) => i.name === subCategory)
+      const indexOfTransac=category.subCategories[indexOfSubCat].transactions.findIndex((i)=>i._id.toString()===tId)
+      const date=category.subCategories[indexOfSubCat].transactions[indexOfTransac].date
+      const amount=category.subCategories[indexOfSubCat].transactions[indexOfTransac].amount
+      const note=category.subCategories[indexOfSubCat].transactions[indexOfTransac].note
+      // const budget=category.subCategories[indexOfSubCat].budget
+      // const desc=category.subCategories[indexOfSubCat].description
+      res.json({category:{
+        // flowType:mainCategory,
+        // subCategory,
+        amount,
+        date,
+        note,
+      }, cat:category.subCategories[indexOfSubCat],ind: indexOfSubCat})
+    } catch (error) {
+      return next(createHTTPError(500, `Error getting in db: ${error}`));
+    }
+  } catch (error) {
+    return next(createHTTPError(500, `Error fetching subcategory: ${error}`));
+  }
+}
+
 module.exports = {
   deleteTransaction,
   deleteSubCategory,
   showAllCategories,
   showTransactions,
+  getTransac,
 };

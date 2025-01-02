@@ -32,7 +32,7 @@ const Verifyotp = () => {
   };
 
   return (
-    <div>
+    <div className="bg-gradient-to-r from-purple-700 via-fuchsia-700 to-pink-500 h-screen">
       <div className="md:text-lg font-tinos font-bold text-green-300 md:px-10 md:py-10 px-4 py-4">
         <Link
           to="/"
@@ -41,8 +41,8 @@ const Verifyotp = () => {
           Go Back
         </Link>
       </div>
-      <div className="flex flex-col items-center  min-h-screen bg-black text-white px-6 md:py-10 py-5">
-        <div className="text-center space-y-4">
+      <div className="flex flex-col items-center bg-gradient-to-l from-purple-700 via-fuchsia-700 to-pink-500 rounded-full text-green-400 px-6 md:py-10 py-5">
+        <div className="text-center space-y-4 ">
           <h2 className="text-3xl md:text-5xl font-extrabold tracking-tight bg-gradient-to-r from-green-400 to-teal-500 bg-clip-text text-transparent">
             Verify OTP
           </h2>

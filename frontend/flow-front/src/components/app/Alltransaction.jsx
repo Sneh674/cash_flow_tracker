@@ -60,7 +60,7 @@ const Alltransaction = () => {
     }, []);
   
     return (
-      <div>
+      <div className="">
         {loading ? (
           <div className="p-10 text-green-300 font-semibold">
             Please wait, Loading...

@@ -41,13 +41,13 @@ const Entry = () => {
   },);
 
   return (
-    <div className="font-tinos flex flex-col items-center justify-center min-h-screen bg-black text-white px-6">
+    <div className="font-tinos flex flex-col items-center justify-center min-h-screen bg-gradient-to-r from-purple-700 via-fuchsia-700 to-pink-500 text-white px-6">
       {/* Header Section */}
       <div className="text-center space-y-4">
         <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight bg-gradient-to-r from-green-400 to-teal-500 bg-clip-text text-transparent">
           Cash Flow Tracker
         </h1>
-        <p className="text-lg md:text-2xl text-gray-400 max-w-xl mx-auto">
+        <p className="text-lg md:text-2xl text-gray-800 max-w-xl mx-auto">
           Take control of your finances with precision and style.
         </p>
       </div>
@@ -69,7 +69,7 @@ const Entry = () => {
       </div>
 
       {/* Footer Section */}
-      <footer className="mt-12 text-sm text-gray-500">
+      <footer className="mt-12 text-sm text-black">
         © 2025 Cash Flow Tracker. All rights reserved.
       </footer>
     </div>

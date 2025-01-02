@@ -27,8 +27,10 @@ const Register = () => {
         `${import.meta.env.VITE_API_URL}/register`,
         formData
       );
-      console.log(resp);
-      navigate("/verifyotp");
+      // console.log(resp);
+      // console.log(resp.data.user._id)
+      const userId=resp.data.user._id;
+      navigate(`/verifyotp/${userId}`);
     } catch (error) {
       console.error(
         "Error during Registration:",
@@ -38,7 +40,7 @@ const Register = () => {
     }
   };
   return (
-    <div className="registerMain font-tinos">
+    <div className="registerMain font-tinos bg-gradient-to-r from-purple-700 via-fuchsia-700 to-pink-500">
       <div>
         <Link to="/" className="go-back-link">
           Go Back

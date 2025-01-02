@@ -1,24 +1,50 @@
 import axios from "axios";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
-const Addtransac = () => {
-  const { id: userId, mainc: mainCategory, subc: subCategory } = useParams();
+const Edittransac = () => {
+  const {
+    id: userId,
+    mainc: mainCategory,
+    subc: subCategory,
+    tid: transacId,
+  } = useParams();
   const navigate = useNavigate();
-
-  // Initialize with current date and time
-  const currentDate = new Date();
-  const currentDateString = currentDate.toISOString().split("T")[0]; // YYYY-MM-DD
-  const currentTimeString = currentDate.toTimeString().split(" ")[0].slice(0, 5); // HH:mm
-
   const [formData, setFormData] = useState({
-    mainCategory,
-    subCategory,
-    amount: null,
+    amount: "",
     note: "",
-    date: currentDateString,
+    date: "",
+    time: "",
   });
-  const [time, setTime] = useState(currentTimeString);
+
+  const fetchTransacDetails = async () => {
+    try {
+      const resp = await axios.get(
+        `${import.meta.env.VITE_API_URL}/home/getTransac/${mainCategory}/${subCategory}/${transacId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+      console.log(resp.data.category)
+      const transaction = resp.data.category;
+      const transactionDate = new Date(transaction.date);
+
+      setFormData({
+        amount: transaction.amount,
+        note: transaction.note,
+        date: transactionDate.toISOString().split("T")[0], // Extract date (YYYY-MM-DD)
+        time: transactionDate.toTimeString().split(" ")[0].slice(0, 5), // Extract time (HH:mm)
+      });
+    } catch (error) {
+      console.error("Error fetching transaction details:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchTransacDetails();
+  }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -28,37 +54,31 @@ const Addtransac = () => {
     }));
   };
 
-  const handleTimeChange = (e) => {
-    setTime(e.target.value);
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     const token = localStorage.getItem("token");
     if (!token) {
       navigate("/");
     }
 
-    // Combine date and time into a single ISO string
-    const combinedDateTime = new Date(
-      `${formData.date}T${time}`
-    ).toISOString();
+    // Combine date and time into ISO string
+    const combinedDateTime = new Date(`${formData.date}T${formData.time}`).toISOString();
 
     try {
-      const resp = await axios.post(
-        `${import.meta.env.VITE_API_URL}/home/addnewtransaction`,
-        { ...formData, date: combinedDateTime },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
-      console.log(resp);
-      navigate(`/home/${userId}/selectedsubcat/${mainCategory}/${subCategory}`);
+    //   await axios.put(
+    //     `${import.meta.env.VITE_API_URL}/home/updatetransaction/${transacId}`,
+    //     { ...formData, date: combinedDateTime },
+    //     {
+    //       headers: {
+    //         Authorization: `Bearer ${token}`,
+    //         "Content-Type": "application/json",
+    //       },
+    //     }
+    //   );
+    //   navigate(`/home/${userId}/selectedsubcat/${mainCategory}/${subCategory}`);
     } catch (error) {
-      console.error(error);
+      console.error("Error updating transaction:", error);
     }
   };
 
@@ -77,9 +97,7 @@ const Addtransac = () => {
         </button>
       </div>
       <div className="flex flex-col items-center pt-10">
-        <h2 className="text-xl md:text-2xl font-bold mb-6">
-          Add New Transaction
-        </h2>
+        <h2 className="text-xl md:text-2xl font-bold mb-6">Edit Transaction</h2>
         <form
           onSubmit={handleSubmit}
           className="space-y-4 w-11/12 max-w-md bg-gray-800 p-6 rounded-md shadow-lg"
@@ -95,9 +113,9 @@ const Addtransac = () => {
               type="number"
               name="amount"
               id="amount"
-              required
+              value={formData.amount}
               onChange={handleChange}
-              placeholder="Enter transaction amount"
+              required
               className="w-full p-3 rounded-md bg-gray-900 border border-green-400 text-green-300 focus:outline-none focus:ring-2 focus:ring-green-500"
             />
           </div>
@@ -109,8 +127,8 @@ const Addtransac = () => {
               type="text"
               name="note"
               id="note"
+              value={formData.note}
               onChange={handleChange}
-              placeholder="Enter note"
               className="w-full p-3 rounded-md bg-gray-900 border border-green-400 text-green-300 focus:outline-none focus:ring-2 focus:ring-green-500"
             />
           </div>
@@ -133,9 +151,10 @@ const Addtransac = () => {
             </label>
             <input
               type="time"
+              name="time"
               id="time"
-              value={time}
-              onChange={handleTimeChange}
+              value={formData.time}
+              onChange={handleChange}
               className="w-full p-3 rounded-md bg-gray-900 border border-green-400 text-green-300 focus:outline-none focus:ring-2 focus:ring-green-500"
             />
           </div>
@@ -143,7 +162,7 @@ const Addtransac = () => {
             type="submit"
             className="w-full bg-green-500 text-black py-2 rounded-md font-semibold hover:bg-green-600 transition duration-300"
           >
-            Submit
+            Update Transaction
           </button>
         </form>
       </div>
@@ -151,4 +170,4 @@ const Addtransac = () => {
   );
 };
 
-export default Addtransac;
+export default Edittransac;

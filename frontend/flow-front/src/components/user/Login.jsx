@@ -38,14 +38,14 @@ const Login = () => {
   };
   const [usingMobile, setUsingMobile] = useState(true);
   return (
-    <div className="font-tinos">
+    <div className="font-tinos bg-gradient-to-r from-purple-700 via-fuchsia-700 to-pink-500">
       <div>
         <Link to="/" className="link">Go Back</Link>
       </div>
-      <div className="loginMain">
+      <div className="loginMain bg-transparent">
         {usingMobile ? (
-          <div className="usemobile">
-            <form onSubmit={handleLoginSubmit}>
+          <div className="usemobile bg-transparent">
+            <form onSubmit={handleLoginSubmit} >
               <select name="cc" id="cc" value={formData.cc} onChange={handleChange}>
                 <option value="91">+91 (India)</option>
                 <option value="1">+1 (USA)</option>

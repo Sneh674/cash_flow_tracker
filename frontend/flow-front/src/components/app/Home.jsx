@@ -123,7 +123,7 @@ const Home = () => {
                 </div>
               ))
             ) : (
-              <div>No categories available.</div>
+              <div className="text-fuchsia-600 flex justify-center text-base sm:text-xl md:text-2xl">No categories available.</div>
             )}
           </div>
         </div>
