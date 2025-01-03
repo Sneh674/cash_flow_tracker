@@ -7,6 +7,17 @@ const Home = () => {
   const [loading, setLoading] = useState(true);
   const [categories, setCategories] = useState([]); // State to store categories
   const { id: userId } = useParams();
+  const [searchVal,setSearchVal]=useState('')
+
+  const updateSearchVal=(e)=>{
+    setSearchVal(e.target.value)
+  }
+
+  const handleSearchSubmit=(e)=>{
+    e.preventDefault();
+    if(searchVal==''){return}
+    navigate(`/home/${userId}/search/${searchVal}`)
+  }
 
   const logOut = async () => {
     localStorage.removeItem("token");
@@ -44,7 +55,6 @@ const Home = () => {
 
   const handleCatClick = (maincat, subcat) => {
     navigate(`/home/${userId}/selectedsubcat/${maincat}/${subcat}`);
-    // alert("fwsefsdc")
   };
 
   useEffect(() => {
@@ -89,20 +99,39 @@ const Home = () => {
             </button>
           </div>
 
+          <form className="flex items-center gap-4 bg-slate-500 p-4 rounded" onSubmit={handleSearchSubmit}>
+              <input
+                type="text"
+                name="searchCat"
+                id="searchCat"
+                placeholder="Enter Category to search for"
+                className="p-2 border rounded"
+                onChange={updateSearchVal}
+              />
+              <input
+                type="submit"
+                value="Search"
+                className="px-4 py-2 bg-blue-500 text-white font-bold rounded hover:bg-blue-600"
+              />
+            </form>
           {/* Display categories in a grid layout */}
           <div className="categories-list grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 m-4">
             {categories.length > 0 ? (
+              
               categories.map((category, index) => (
                 <div
                   key={index}
                   className="category-item cursor-pointer bg-gray-700 m-2 bg-opacity-80 rounded-md text-white flex flex-col sm:text-base text-sm md:text-xl overflow-hidden"
                 >
-                  <div className="subcatdetails hover:bg-slate-600 rounded-md p-4" onClick={() =>
-                    handleCatClick(
-                      category.mainCategory,
-                      category.subCategoryName
-                    )
-                  }>
+                  <div
+                    className="subcatdetails hover:bg-slate-600 rounded-md p-4"
+                    onClick={() =>
+                      handleCatClick(
+                        category.mainCategory,
+                        category.subCategoryName
+                      )
+                    }
+                  >
                     <div className="text-base smtext-lg md:text-2xl font-semibold">
                       Flow Type: {category.mainCategory}
                     </div>
@@ -123,7 +152,9 @@ const Home = () => {
                 </div>
               ))
             ) : (
-              <div className="text-fuchsia-600 flex justify-center text-base sm:text-xl md:text-2xl">No categories available.</div>
+              <div className="text-fuchsia-600 flex justify-center text-base sm:text-xl md:text-2xl">
+                No categories available.
+              </div>
             )}
           </div>
         </div>

@@ -15,6 +15,7 @@ import Transacforcat from './components/app2/Transacforcat';
 import Editcat from './components/app2/Editcat';
 import Addtransac from './components/app2/Addtransac';
 import Edittransac from './components/app2/Edittransac';
+import Searchcat from './components/app/Searchcat';
 
 function App() {
   // const [count, setCount] = useState(0);
@@ -60,6 +61,10 @@ function App() {
     {
       path:"/home/:id/edittransaction/:mainc/:subc/:tid",
       element: <Edittransac />
+    },
+    {
+      path: "/home/:id/search/:subCategory",
+      element: <Searchcat />
     }
   ]);
 

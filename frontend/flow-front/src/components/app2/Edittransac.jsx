@@ -19,15 +19,19 @@ const Edittransac = () => {
 
   const fetchTransacDetails = async () => {
     try {
+      const token=localStorage.getItem('token')
+      if(!token){navigate("/")}
       const resp = await axios.get(
-        `${import.meta.env.VITE_API_URL}/home/getTransac/${mainCategory}/${subCategory}/${transacId}`,
+        `${
+          import.meta.env.VITE_API_URL
+        }/home/getTransac/${mainCategory}/${subCategory}/${transacId}`,
         {
           headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
+            Authorization: `Bearer ${token}`,
           },
         }
       );
-      console.log(resp.data.category)
+      console.log(resp.data.category);
       const transaction = resp.data.category;
       const transactionDate = new Date(transaction.date);
 
@@ -63,20 +67,26 @@ const Edittransac = () => {
     }
 
     // Combine date and time into ISO string
-    const combinedDateTime = new Date(`${formData.date}T${formData.time}`).toISOString();
+    const combinedDateTime = new Date(
+      `${formData.date}T${formData.time}`
+    ).toISOString();
 
     try {
-    //   await axios.put(
-    //     `${import.meta.env.VITE_API_URL}/home/updatetransaction/${transacId}`,
-    //     { ...formData, date: combinedDateTime },
-    //     {
-    //       headers: {
-    //         Authorization: `Bearer ${token}`,
-    //         "Content-Type": "application/json",
-    //       },
-    //     }
-    //   );
-    //   navigate(`/home/${userId}/selectedsubcat/${mainCategory}/${subCategory}`);
+      // console.log({...formData, date: combinedDateTime})
+      const resp = await axios.patch(
+        `${
+          import.meta.env.VITE_API_URL
+        }/home/${mainCategory}/${subCategory}/${transacId}`,
+        { ...formData, date: combinedDateTime },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      console.log(resp)
+      navigate(`/home/${userId}/selectedsubcat/${mainCategory}/${subCategory}`)
     } catch (error) {
       console.error("Error updating transaction:", error);
     }

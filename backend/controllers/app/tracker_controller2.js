@@ -237,10 +237,57 @@ const getTransac=async(req,res,next)=>{
   }
 }
 
+// const showSearchCat=async(req,res,next)=>{
+//   const subCategory=req.params.subCategory
+//   const userId = req.user.id;
+//   try {
+//     const resp=await categoryModel.find({userId, "subCategories.name":{ $regex: subCategory, $options: "i" }})
+//     res.json({response: resp})
+//     const list=[]
+
+//   } catch (error) {
+//     return next(createHTTPError(500,`Error searching for category: ${error}`))
+//   }
+// }
+
+const showSearchCat = async (req, res, next) => {
+  const subCategory = req.params.subCategory.toLowerCase(); // Convert to lowercase for case-insensitive search
+  const userId = req.user.id;
+
+  try {
+    const categories = await categoryModel.find({ userId });
+
+    // Filter and map the response
+    const filteredResponse = categories.map((category) => {
+      const matchingSubCategories = category.subCategories.filter((subCategoryItem) =>
+        subCategoryItem.name.toLowerCase().includes(subCategory) // Match substring in subCategory name
+      );
+
+      return {
+        flowType: category.flowType,
+        subCategories: matchingSubCategories.map((subCategoryItem) => ({
+          name: subCategoryItem.name,
+          description: subCategoryItem.description,
+          budget: subCategoryItem.budget,
+        })),
+      };
+    });
+
+    // Remove categories without any matching subcategories
+    const result = filteredResponse.filter((item) => item.subCategories.length > 0);
+
+    res.json({ response: result });
+  } catch (error) {
+    return next(createHTTPError(500, `Error searching for category: ${error}`));
+  }
+};
+
+
 module.exports = {
   deleteTransaction,
   deleteSubCategory,
   showAllCategories,
   showTransactions,
   getTransac,
+  showSearchCat,
 };

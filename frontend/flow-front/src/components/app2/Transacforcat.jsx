@@ -7,11 +7,15 @@ const Transacforcat = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [transactions, setTransactions] = useState([]);
+  const [deleteBox, setDeleteBox] = useState(false);
+  const [tid, setTid] = useState("");
 
   const fetchTransactions = async () => {
     try {
       const resp = await axios.get(
-        `${import.meta.env.VITE_API_URL}/home/getSubCat/${mainCategory}/${subCategory}`,
+        `${
+          import.meta.env.VITE_API_URL
+        }/home/getSubCat/${mainCategory}/${subCategory}`,
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -32,6 +36,36 @@ const Transacforcat = () => {
 
   const handleAddTransac = () => {
     navigate(`/home/${userId}/addtransaction/${mainCategory}/${subCategory}`);
+  };
+
+  const deleteClick = (transacId) => {
+    setTid(transacId);
+    setDeleteBox(true);
+  };
+  const handleDelete = async () => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      navigate("/");
+    }
+    try {
+      const resp = await axios.delete(
+        `${
+          import.meta.env.VITE_API_URL
+        }/home/${mainCategory}/${subCategory}/${tid}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      setTid("");
+      console.log(resp);
+      setDeleteBox(false);
+      fetchTransactions();
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
@@ -87,7 +121,10 @@ const Transacforcat = () => {
                 >
                   Edit
                 </Link>
-                <button className="text-sm sm:text-base font-bold text-red-500 hover:bg-red-500 hover:border-red-500 hover:ring-2 ring-red-400 w-max">
+                <button
+                  onClick={() => deleteClick(transaction._id)}
+                  className="text-sm sm:text-base font-bold text-red-500 hover:bg-red-500 hover:border-red-500 hover:ring-2 ring-red-400 w-max"
+                >
                   Delete
                 </button>
               </div>
@@ -96,6 +133,35 @@ const Transacforcat = () => {
         </div>
       ) : (
         <div className="text-center mt-10">No transactions so far</div>
+      )}
+      {deleteBox && (
+        <div
+          onClick={() => setDeleteBox(false)}
+          className="delbox fixed inset-0 flex flex-col align-middle justify-center items-center backdrop-brightness-50"
+        >
+          <div
+            onClick={(e) => e.stopPropagation()}
+            className="gap-2 sm:gap-5 md:gap-8 md:text-2xl sm:text-xl text-base  flex flex-col items-center bg-slate-600 md:p-10 sm:p-6 p-3 mx-5 rounded-lg"
+          >
+            <div className="md:text-2xl">
+              Are you sure you want to delete this Transaction ?
+            </div>
+            <div className="delbtn flex justify-evenly w-full">
+              <button
+                className="w-max sm:px-7 px-4 py-2 text-orange-500 border-orange-500 hover:bg-orange-600 rounded-lg"
+                onClick={handleDelete}
+              >
+                Yes
+              </button>
+              <button
+                className="w-max sm:px-7 px-4 py-2 text-cyan-500 border-cyan-500 hover:bg-cyan-600 rounded-lg"
+                onClick={() => setDeleteBox(false)}
+              >
+                No
+              </button>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );
