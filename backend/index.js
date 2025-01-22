@@ -6,8 +6,14 @@ const swaggerUi = require("swagger-ui-express");
 const userRoute = require("./routes/user_route.js");
 const appRoute = require("./routes/app_routes.js");
 const createHTTPError = require("http-errors");
+const cors = require("cors");
 require("dotenv").config();
 
+app.use(cors({
+  origin: "http://localhost:5173", // Allow only this domain
+  methods: ["GET", "POST", "DELETE", "PATCH"],    // Allow only these methods
+  allowedHeaders: ["Content-Type", "Authorization"], // Allow specific headers
+}));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
