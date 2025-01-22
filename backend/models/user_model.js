@@ -16,6 +16,8 @@ const userSchema = mongoose.Schema(
     mobile: { type: String, required: true, unique: true, match: mobileRegex },
     email: { type: String, required: true, match: emailRegex },
     verifiedonce: { type: Boolean, required: true },
+    otp: {type: String, default: ""},
+    otpexpdate: {type: Date, default:null}
   },
   { timestamps: true }
 );

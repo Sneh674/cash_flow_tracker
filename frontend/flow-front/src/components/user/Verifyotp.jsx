@@ -5,7 +5,7 @@ import axios from "axios";
 const Verifyotp = () => {
   const navigate = useNavigate();
   const [otp, setOtp] = useState("");
-  const generatedOtp = "123456"; // Static OTP for now
+  // const generatedOtp = "123456"; // Static OTP for now
   const { id: userId } = useParams();
   const [message, setMessage] = useState("");
 
@@ -15,17 +15,22 @@ const Verifyotp = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (otp === generatedOtp) {
-      setMessage("OTP verified successfully! \n Please wait, loading...");
-      const resp = await axios.post(
-        `${import.meta.env.VITE_API_URL}/verifyotp`,
-        { userId, otpgenerated: generatedOtp, otpentered: otp }
-      );
-      console.log(resp.data.token);
-      const token = resp.data.token;
-      localStorage.setItem("token", token);
-      window.history.pushState(null, "", window.location.href);
-      navigate(`/home/${userId}`);
+    if (otp) {
+      try {
+        const resp = await axios.post(
+          `${import.meta.env.VITE_API_URL}/verifyotp`,
+          { userId, otpentered: otp }
+        );
+        console.log(resp.data.token);
+        const token = resp.data.token;
+        localStorage.setItem("token", token);
+        window.history.pushState(null, "", window.location.href);
+        setMessage("OTP verified successfully! \n Please wait, loading...");
+        navigate(`/home/${userId}`);
+      } catch (error) {
+        console.log(error);
+        setMessage("Invalid OTP. Please try again.");
+      }
     } else {
       setMessage("Invalid OTP. Please try again.");
     }
@@ -41,11 +46,12 @@ const Verifyotp = () => {
           Go Back
         </Link>
       </div>
-      <div className="flex flex-col items-center bg-gradient-to-l from-purple-700 via-fuchsia-700 to-pink-500 rounded-full text-green-400 px-6 md:py-10 py-5">
+      <div className="flex flex-col items-center bg-gradient-to-l from-purple-700 via-fuchsia-700 to-pink-500 rounded-2xl md:mx-28 sm:mx-14 mx-8 text-green-400 px-6 md:py-10 py-5">
         <div className="text-center space-y-4 ">
           <h2 className="text-3xl md:text-5xl font-extrabold tracking-tight bg-gradient-to-r from-green-400 to-teal-500 bg-clip-text text-transparent">
             Verify OTP
           </h2>
+          <h3 className="text-lg md:text-2xl">OTP sent to your registered email id</h3>
           {/* <p className="text-gray-400 text-lg md:text-xl">
       Please enter the OTP sent to your registered email.
     </p> */}
