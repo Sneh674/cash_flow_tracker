@@ -83,8 +83,8 @@ const Home = () => {
           Please wait, Loading...
         </div>
       ) : (
-        <div className="">
-          <div className="btns flex justify-between">
+        <div className="flex flex-col items-center">
+          <div className="btns flex justify-between w-full">
             <button
               onClick={logOut}
               className="w-max m-3 md:m-5 md:text-xl text-black border-cyan-500 bg-cyan-400 text-base font-bold hover:font-extrabold hover:bg-green-400"
@@ -99,19 +99,19 @@ const Home = () => {
             </button>
           </div>
 
-          <form className="flex items-center gap-4 bg-slate-500 p-4 rounded" onSubmit={handleSearchSubmit}>
+          <form className="flex items-center md:gap-4 gap-2 bg-slate-500 sm:p-4 p-2 rounded lg:w-1/3 md:w-1/3 sm:w-1/2 w-2/3" onSubmit={handleSearchSubmit}>
               <input
                 type="text"
                 name="searchCat"
                 id="searchCat"
-                placeholder="Enter Category to search for"
+                placeholder="Enter Category to search"
                 className="p-2 border rounded"
                 onChange={updateSearchVal}
               />
               <input
                 type="submit"
                 value="Search"
-                className="px-4 py-2 bg-blue-500 text-white font-bold rounded hover:bg-blue-600"
+                className="md:px-4 md:py-2 px-1 py-1 bg-blue-500 text-white font-bold rounded hover:bg-blue-600"
               />
             </form>
           {/* Display categories in a grid layout */}

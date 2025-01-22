@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams, Link } from "react-router-dom";
 import axios from "axios";
 
 const Searchcat = () => {
@@ -35,12 +35,12 @@ const Searchcat = () => {
   }, [subCategory, navigate]);
 
   return (
-    <div className="p-5 bg-gray-800 text-white min-h-screen">
+    <div className="bg-cover bg-center p-5 h-screen bg-[url('/buildings.jpg')] overflow-y-scroll">
       <button
         onClick={() => {
           navigate(`/home/${userId}`);
         }}
-        className="mb-4 px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
+        className="mb-4 px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 w-max"
       >
         Go Back
       </button>
@@ -54,22 +54,39 @@ const Searchcat = () => {
               {results.map((category, index) => (
                 <div key={index} className="mb-6">
                   {category.subCategories.map((subCategory, idx) => (
-                    <div key={idx} className="bg-slate-600 p-3 rounded-md my-4">
+                    <div key={idx} className="bg-slate-600 bg-opacity-80 p-3 rounded-md my-4">
                       <h3 className="font-bold text-xl">{category.flowType}</h3>
-                      <h4 className="font-semibold text-lg">{subCategory.name}</h4>
-                      <p className="text-sm text-gray-300">{subCategory.description}</p>
+                      <h4 className="font-semibold text-lg">
+                        {subCategory.name}
+                      </h4>
+                      <p className="text-sm text-gray-300">
+                        {subCategory.description}
+                      </p>
 
                       {/* Show budget only if flowType is Outflow or contains 'outflow' */}
-                      {(category.flowType.toLowerCase() === "outflow" || category.flowType.toLowerCase().includes("outflow")) && (
-                        <p className="text-sm text-green-300">Budget: {subCategory.budget}</p>
+                      {(category.flowType.toLowerCase() === "outflow" ||
+                        category.flowType
+                          .toLowerCase()
+                          .includes("outflow")) && (
+                        <p className="text-sm text-green-300">
+                          Budget: {subCategory.budget}
+                        </p>
                       )}
+                      <Link onClick={(e)=>{e.stopPropagation();}}
+                        to={`/home/${userId}/editsubcat/${category.flowType}/${subCategory.name}`}
+                        className="text-blue-400 hover:text-green-400 hover:bg-slate-600 rounded-md p-3 flex justify-center"
+                      >
+                        Edit
+                      </Link>
                     </div>
                   ))}
                 </div>
               ))}
             </div>
           ) : (
-            <div className="text-center text-gray-300">No matching categories found</div>
+            <div className="text-center text-gray-300">
+              No matching categories found
+            </div>
           )}
         </div>
       )}

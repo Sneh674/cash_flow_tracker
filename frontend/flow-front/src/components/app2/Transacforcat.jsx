@@ -86,7 +86,7 @@ const Transacforcat = () => {
       </div>
 
       {loading ? (
-        <div className="text-center mt-10">Loading ...</div>
+        <div className="text-center mt-10 ">Loading ...</div>
       ) : transactions.length > 0 ? (
         <div className="p-5 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {transactions.map((transaction) => (
@@ -132,7 +132,9 @@ const Transacforcat = () => {
           ))}
         </div>
       ) : (
-        <div className="text-center mt-10">No transactions so far</div>
+        <div className="text-center mt-10">
+          <span className="w-max mt-10 md:text-3xl sm:text-2xl text-lg bg-emerald-500 backdrop-blur-2xl text-white p-3 rounded-lg bg-opacity-55">No transactions so far</span>
+        </div>
       )}
       {deleteBox && (
         <div
