@@ -47,19 +47,21 @@ const addSubCategory = async (req, res, next) => {
           ],
         });
       } else {
-        mainExists = await categoryModel.findOneAndUpdate(
-          { userId, flowType: mainCategory },
-          {
-            subCategories: [
-              {
-                name: subCategory,
-                description: desc,
-                budget,
-                transactions: [],
-              },
-            ],
-          }
-        );
+        mainExists.subCategories.push({name:subCategory,description:desc,budget,transactions:[]});
+        await mainExists.save();
+        // mainExists = await categoryModel.findOneAndUpdate(
+        //   { userId, flowType: mainCategory },
+        //   {
+        //     subCategories: [
+        //       {
+        //         name: subCategory,
+        //         description: desc,
+        //         budget,
+        //         transactions: [],
+        //       },
+        //     ],
+        //   }
+        // );
       }
       res.json({ addedsubcat: mainExists });
     } catch (error) {

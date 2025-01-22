@@ -5,8 +5,11 @@ const createHttpError = require("http-errors");
 const { signAccessToken } = require("../../helpers/jwt.js");
 
 const verifyOTP = async (req, res, next) => {
-  const { otpentered, otpgenerated, userId } = req.body;
+  const { otpentered, userId } = req.body;
   //or use req.params.id for userId
+  const user=await userModel.findOne({_id:userId})
+  // console.log(user.otp)
+  const otpgenerated=user.otp
 
   if (!userId) {
     return next(createHTTPError(500, "Error receiving user id"));
