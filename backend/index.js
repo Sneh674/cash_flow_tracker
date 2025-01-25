@@ -10,7 +10,7 @@ const cors = require("cors");
 require("dotenv").config();
 
 app.use(cors({
-  origin: "https://cash-flow-tracker.netlify.app/",
+  origin: "https://cash-flow-tracker.netlify.app",
   // origin: "http://localhost:5173", // Allow only this domain
   methods: ["GET", "POST", "DELETE", "PATCH"],    // Allow only these methods
   allowedHeaders: ["Content-Type", "Authorization"], // Allow specific headers
